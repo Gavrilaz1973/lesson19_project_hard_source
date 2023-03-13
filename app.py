@@ -32,15 +32,15 @@ def register_extensions(app):
 app = create_app(Config())
 app.debug = True
 
-with app.app_context():
-    db.create_all()
-
-    u1 = User(username="vasya", password=user_service.get_hash("my_little_pony"), role="admin")
-    u2 = User(username="oleg", password=user_service.get_hash("qwerty"), role="user")
-    u3 = User(username="oleg", password=user_service.get_hash("P@ssw0rd"), role="admin")
-
-    with db.session.begin():
-        db.session.add_all([u1, u2, u3])
+# with app.app_context():
+#     db.create_all()
+#     #
+#     u1 = User(email="ha@js.ru", password=user_service.get_hash("my_little_pony"), name="vasya", surname = "pupkin", favorite_genre="drame")
+#     # u2 = User(username="oleg", password=user_service.get_hash("qwerty"), role="user")
+#     # u3 = User(username="oleg", password=user_service.get_hash("P@ssw0rd"), role="admin")
+#     #
+#     with db.session.begin():
+#         db.session.add_all([u1])
 
 if __name__ == '__main__':
     app.run(host="localhost", port=10001, debug=True)

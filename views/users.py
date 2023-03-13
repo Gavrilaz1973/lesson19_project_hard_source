@@ -1,40 +1,28 @@
 from flask_restx import Resource, Namespace
 from flask import request
 from dao.model.user import UserSchema
-from implemented import user_service
+from implemented import user_service, auth_service
 
 user_ns = Namespace('users')
 
 
-@user_ns.route('/')
+@user_ns.route('/password')
 class UserView(Resource):
-    def get(self):
-        rs = user_service.get_all()
-        res = UserSchema(many=True).dump(rs)
-        return res, 200
+    def put(self):
+        data = request.json
+        return auth_service.approve_new_tokens(data)
 
-    def post(self):
-        user_jsn = request.json
-        user = user_service.create(user_jsn)
-        return "", 201
-
-
-@user_ns.route('/<int:rid>')
+@user_ns.route('/<int:uid>')
 class UserView(Resource):
-    def get(self, rid):
-        r = user_service.get_one(rid)
+    def get(self, uid):
+        r = user_service.get_one(uid)
         sm_d = UserSchema().dump(r)
         return sm_d, 200
 
-    def put(self, rid):
+    def patch(self, uid):
         data = request.json
-        if 'id' not in data:
-            data['id'] = rid
         user_service.update(data)
         return "", 204
 
-    def delete(self, rid):
-        user_service.delete(rid)
-        return "", 204
 
 

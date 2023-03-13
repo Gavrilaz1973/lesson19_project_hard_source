@@ -1,23 +1,25 @@
 from flask_restx import Resource, Namespace
 from flask import request
-from implemented import auth_service
+from implemented import auth_service, user_service
 
 auth_ns = Namespace('auth')
 
 
-@auth_ns.route('/')
+@auth_ns.route('/register')
 class AuthView(Resource):
-    def get(self):
+    def post(self):
         data = request.json
-        username = data.get('username')
-        password = data.get('password')
-        if not all([username, password]):
-            return "", 404
-        tokens = auth_service.generate_tokens(username, password)
-        return tokens, 201
+        user_service.create(data)
+        return '', 201
+
+
+@auth_ns.route('/login')
+class AuthView(Resource):
+    def post(self):
+        data = request.json
+        return auth_service.checking_user(data)
 
     def put(self):
         data = request.json
-        refresh_token = data.get('refresh_token')
-        tokens = auth_service.approve_refresh_token(refresh_token)
-        return tokens, 201
+        return auth_service.approve_new_tokens(data)
+
