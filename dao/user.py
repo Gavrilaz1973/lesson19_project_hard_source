@@ -5,9 +5,9 @@ class UserDAO:
     def __init__(self, session):
         self.session = session
 
-    def get_one(self, bid):
-        return self.session.query(User).get(bid)
-
+    # def get_one(self, bid):
+    #     return self.session.query(User).get(bid)
+    #
     def get_all(self):
         return self.session.query(User).all()
 
@@ -20,11 +20,12 @@ class UserDAO:
         self.session.commit()
         return ent
 
-    def update(self, user_d):
-        user = self.get_one(user_d.get("id"))
-        user.name = user_d.get("name")
-        user.surname = user_d.get("surname")
-        user.favorite_genre = user_d.get("favorite_genre")
+    def update(self, data):
+        email = data.get("email")
+        user = self.get_by_email(email)
+        user.name = data.get("name")
+        user.surname = data.get("surname")
+        user.favorite_genre = data.get("favorite_genre")
 
         self.session.add(user)
         self.session.commit()
